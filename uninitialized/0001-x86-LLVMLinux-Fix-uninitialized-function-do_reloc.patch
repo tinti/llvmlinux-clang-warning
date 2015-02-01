@@ -1,0 +1,32 @@
+From 0d997d1d2b5aa42ffd741af13b01f94f5fc1dd98 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Vin=C3=ADcius=20Tinti?= <viniciustinti@gmail.com>
+Date: Thu, 29 Jan 2015 01:35:34 -0200
+Subject: [PATCH] x86: LLVMLinux: Fix uninitialized function do_reloc
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Explicit initializes do_reloc function with NULL. Later the function is
+either proper initialized of an error issued.
+
+Signed-off-by: Vinícius Tinti <viniciustinti@gmail.com>
+---
+ arch/x86/tools/relocs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
+index 0c2fae8..1d533f1 100644
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -971,7 +971,7 @@ static void emit_relocs(int as_text, int use_real_mode)
+ 	int i;
+ 	int (*write_reloc)(uint32_t, FILE *) = write32;
+ 	int (*do_reloc)(struct section *sec, Elf_Rel *rel, Elf_Sym *sym,
+-			const char *symname);
++			const char *symname) = NULL;
+ 
+ #if ELF_BITS == 64
+ 	if (!use_real_mode)
+-- 
+2.2.1
+
