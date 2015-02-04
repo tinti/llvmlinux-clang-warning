@@ -1,0 +1,28 @@
+From 34630fc18d5d99fd9bca5a506eccf7a1e9497497 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Vin=C3=ADcius=20Tinti?= <viniciustinti@gmail.com>
+Date: Wed, 4 Feb 2015 00:47:03 -0200
+Subject: [PATCH 4/4] all: LLVMLinux: Do not warn about empty format string
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Vinícius Tinti <viniciustinti@gmail.com>
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Makefile b/Makefile
+index c8e17c0..67a3984 100644
+--- a/Makefile
++++ b/Makefile
+@@ -302,6 +302,7 @@ HOSTCXXFLAGS = -O2
+ 
+ ifeq ($(shell $(HOSTCC) -v 2>&1 | grep -c "clang version"), 1)
+ HOSTCFLAGS  += -Wno-unused-value -Wno-unused-parameter \
++		-Wformat-zero-length \
+ 		-Wno-missing-field-initializers -fno-delete-null-pointer-checks
+ endif
+ 
+-- 
+1.9.1
+

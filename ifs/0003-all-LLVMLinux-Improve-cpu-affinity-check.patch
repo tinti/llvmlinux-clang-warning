@@ -1,0 +1,46 @@
+From b56195d704b6505ea29d23821963ef3e52fe3c96 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Vin=C3=ADcius=20Tinti?= <viniciustinti@gmail.com>
+Date: Wed, 4 Feb 2015 00:38:22 -0200
+Subject: [PATCH 3/4] all: LLVMLinux: Improve cpu affinity check
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Remove the check for valid affinity when CONFIG_CPUMASK_OFFSTACK is not
+set.
+
+In such case the 'irq_data.affinity' is a fixed size array of one.
+Therefore it will never be a NULL pointer and it does not need to be
+checked.
+
+Signed-off-by: Vinícius Tinti <viniciustinti@gmail.com>
+---
+ kernel/irq/manage.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 8069237..b980f56 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -761,10 +761,18 @@ irq_thread_check_affinity(struct irq_desc *desc, struct irqaction *action)
+ 	 * This code is triggered unconditionally. Check the affinity
+ 	 * mask pointer. For CPU_MASK_OFFSTACK=n this is optimized out.
+ 	 */
++#ifdef CONFIG_CPUMASK_OFFSTACK
+ 	if (desc->irq_data.affinity)
+ 		cpumask_copy(mask, desc->irq_data.affinity);
+ 	else
+ 		valid = false;
++#else
++	/*
++	 * In this case the affinity is a fixed array of size one.
++	 * It will be always true.
++	 */
++	cpumask_copy(mask, desc->irq_data.affinity);
++#endif
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	if (valid)
+-- 
+1.9.1
+

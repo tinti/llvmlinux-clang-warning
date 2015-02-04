@@ -1,1 +1,4 @@
 uninitialized/0001-x86-LLVMLinux-Fix-uninitialized-function-do_reloc.patch
+typo/0002-all-LLVMLinux-Remove-double-parentheses.patch
+ifs/0003-all-LLVMLinux-Improve-cpu-affinity-check.patch
+format-string/0004-all-LLVMLinux-Do-not-warn-about-empty-format-string.patch
